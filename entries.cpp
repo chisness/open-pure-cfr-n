@@ -61,7 +61,7 @@ Entries *new_loaded_entries( const size_t num_entries_per_bucket,
     ( *data ) = ( void * ) uint8_t_data;
     break;
   }
-    
+
   case TYPE_INT: {
     int *int_data = ( int * ) ( *data );
     entries = new Entries_der<int>( num_entries_per_bucket, total_num_entries,
@@ -88,6 +88,15 @@ Entries *new_loaded_entries( const size_t num_entries_per_bucket,
     ( *data ) = ( void * ) uint64_t_data;
     break;
   }
+
+	case TYPE_DOUBLE: {
+		double *double_data = ( double * ) ( *data );
+		entries = new Entries_der<double>( num_entries_per_bucket,
+					 total_num_entries, uint64_t_data );
+		double_data += total_num_entries;
+		( *data ) = ( void * ) double_data;
+		break;
+	}
 
   default: {
     fprintf( stderr, "unrecognized entry type [%d]\n", type );

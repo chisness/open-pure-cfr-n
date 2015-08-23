@@ -27,19 +27,19 @@ extern "C" {
 
 class PureCfrMachine {
 public:
-  
+
   PureCfrMachine( const Parameters &params );
   ~PureCfrMachine( );
 
   void do_iteration( rng_state_t &rng );
-  
+
   /* Returns 0 on success, 1 on failure, -1 on warning */
   int write_dump( const char *dump_prefix, const bool do_regrets = true ) const;
-  int load_dump( const char *dump_prefix ); 
+  int load_dump( const char *dump_prefix );
 
-protected:  
+protected:
   int generate_hand( hand_t &hand, rng_state_t &rng );
-  int walk_pure_cfr( const int position,
+  double walk_pure_cfr( const int position,
 		     const BettingNode *cur_node,
 		     const hand_t &hand,
 		     rng_state_t &rng );

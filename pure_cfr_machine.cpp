@@ -42,15 +42,15 @@ PureCfrMachine::PureCfrMachine( const Parameters &params )
 	  MAX_ROUNDS * sizeof( num_entries_per_bucket[ 0 ] ) );
   memset( total_num_entries, 0, MAX_ROUNDS * sizeof( total_num_entries[ 0 ] ) );
   ag.count_entries( num_entries_per_bucket, total_num_entries );
-  
+
   /* initialize regret and avg strategy */
   for( int r = 0; r < MAX_ROUNDS; ++r ) {
     if( r < ag.game->numRounds ) {
 
       /* Regret */
       switch( REGRET_TYPES[ r ] ) {
-      case TYPE_INT:
-	regrets[ r ] = new Entries_der<int>( num_entries_per_bucket[ r ],
+      case TYPE_DOUBLE:
+	regrets[ r ] = new Entries_der<double>( num_entries_per_bucket[ r ],
 					     total_num_entries[ r ] );
 	break;
 
@@ -59,7 +59,7 @@ PureCfrMachine::PureCfrMachine( const Parameters &params )
 		 "note that type must be signed\n", REGRET_TYPES[ r ] );
 	exit( -1 );
       }
-	  	  
+
       if( do_average ) {
 	switch( AVG_STRATEGY_TYPES[ r ] ) {
 	case TYPE_UINT8_T:
@@ -73,19 +73,24 @@ PureCfrMachine::PureCfrMachine( const Parameters &params )
 	    = new Entries_der<int>( num_entries_per_bucket[ r ],
 				    total_num_entries[ r ] );
 	  break;
-	  
+
 	case TYPE_UINT32_T:
 	  avg_strategy[ r ]
 	    = new Entries_der<uint32_t>( num_entries_per_bucket[ r ],
 					 total_num_entries[ r ] );
 	  break;
-		
+
 	case TYPE_UINT64_T:
 	  avg_strategy[ r ]
 	    = new Entries_der<uint64_t>( num_entries_per_bucket[ r ],
 					 total_num_entries[ r ] );
+   break;
+ case TYPE_DOUBLE:
+	  avg_strategy[ r ]
+	    = new Entries_der<double>( num_entries_per_bucket[ r ],
+				    total_num_entries[ r ] );
 	  break;
-	  
+
 	default:
 	  fprintf( stderr, "unrecognized avg strategy type [%d]\n",
 		   AVG_STRATEGY_TYPES[ r ] );
@@ -94,7 +99,7 @@ PureCfrMachine::PureCfrMachine( const Parameters &params )
       } else {
 	avg_strategy[ r ] = NULL;
       }
-	    	  
+
     } else {
       /* Round out of range */
       regrets[ r ] = NULL;
@@ -153,7 +158,7 @@ int PureCfrMachine::write_dump( const char *dump_prefix,
 	return 1;
       }
     }
-    
+
     fclose( file );
   }
 
@@ -224,7 +229,7 @@ int PureCfrMachine::load_dump( const char *dump_prefix )
 
     /* Load avg strategy */
     for( int r = 0; r < ag.game->numRounds; ++r ) {
-	  
+
       if( avg_strategy[ r ]->load( file ) ) {
 	fprintf( stderr, "failed to load dump file [%s] for round %d\n",
 		 filename, r );
@@ -295,15 +300,15 @@ int PureCfrMachine::generate_hand( hand_t &hand, rng_state_t &rng )
     hand.eval.pot_frac_recip[ 1 ][ LEAF_P0 ] = INT_MAX;
     hand.eval.pot_frac_recip[ 2 ][ LEAF_P0 ] = INT_MAX;
     hand.eval.pot_frac_recip[ 0 ][ LEAF_P1 ] = INT_MAX;
-    hand.eval.pot_frac_recip[ 1 ][ LEAF_P1 ] = 1;    
+    hand.eval.pot_frac_recip[ 1 ][ LEAF_P1 ] = 1;
     hand.eval.pot_frac_recip[ 2 ][ LEAF_P1 ] = INT_MAX;
     hand.eval.pot_frac_recip[ 0 ][ LEAF_P2 ] = INT_MAX;
-    hand.eval.pot_frac_recip[ 1 ][ LEAF_P2 ] = INT_MAX;    
+    hand.eval.pot_frac_recip[ 1 ][ LEAF_P2 ] = INT_MAX;
     hand.eval.pot_frac_recip[ 2 ][ LEAF_P2 ] = 1;
     /* One player folds */
-    hand.eval.pot_frac_recip[ 0 ][ LEAF_P1_P2 ] = INT_MAX;  
-    hand.eval.pot_frac_recip[ 1 ][ LEAF_P0_P2 ] = INT_MAX;  
-    hand.eval.pot_frac_recip[ 2 ][ LEAF_P0_P1 ] = INT_MAX;  
+    hand.eval.pot_frac_recip[ 0 ][ LEAF_P1_P2 ] = INT_MAX;
+    hand.eval.pot_frac_recip[ 1 ][ LEAF_P0_P2 ] = INT_MAX;
+    hand.eval.pot_frac_recip[ 2 ][ LEAF_P0_P1 ] = INT_MAX;
     if( ranks[ 0 ] > ranks[ 1 ] ) {
       /* Player 0 wins in showdown when player 2 folds */
       hand.eval.pot_frac_recip[ 0 ][ LEAF_P0_P1 ] = 1;
@@ -315,8 +320,8 @@ int PureCfrMachine::generate_hand( hand_t &hand, rng_state_t &rng )
     } else {
       /* Players 0 and 1 tie in showdown when player 2 folds */
       hand.eval.pot_frac_recip[ 0 ][ LEAF_P0_P1 ] = 2;
-      hand.eval.pot_frac_recip[ 1 ][ LEAF_P0_P1 ] = 2; 
-    }    
+      hand.eval.pot_frac_recip[ 1 ][ LEAF_P0_P1 ] = 2;
+    }
     if( ranks[ 0 ] > ranks[ 2 ] ) {
       /* Player 0 wins in showdown when player 1 folds */
       hand.eval.pot_frac_recip[ 0 ][ LEAF_P0_P2 ] = 1;
@@ -328,8 +333,8 @@ int PureCfrMachine::generate_hand( hand_t &hand, rng_state_t &rng )
     } else {
       /* Players 0 and 2 tie in showdown when player 1 folds */
       hand.eval.pot_frac_recip[ 0 ][ LEAF_P0_P2 ] = 2;
-      hand.eval.pot_frac_recip[ 2 ][ LEAF_P0_P2 ] = 2; 
-    }    
+      hand.eval.pot_frac_recip[ 2 ][ LEAF_P0_P2 ] = 2;
+    }
     if( ranks[ 1 ] > ranks[ 2 ] ) {
       /* Player 1 wins in showdown when player 0 folds */
       hand.eval.pot_frac_recip[ 1 ][ LEAF_P1_P2 ] = 1;
@@ -341,7 +346,7 @@ int PureCfrMachine::generate_hand( hand_t &hand, rng_state_t &rng )
     } else {
       /* Players 1 and 2 tie in showdown when player 0 folds */
       hand.eval.pot_frac_recip[ 1 ][ LEAF_P1_P2 ] = 2;
-      hand.eval.pot_frac_recip[ 2 ][ LEAF_P1_P2 ] = 2; 
+      hand.eval.pot_frac_recip[ 2 ][ LEAF_P1_P2 ] = 2;
     }
     /* No players fold */
     for( int p = 0; p < ag.game->numPlayers; ++p ) {
@@ -359,22 +364,22 @@ int PureCfrMachine::generate_hand( hand_t &hand, rng_state_t &rng )
     return 1;
   }
 
-  return 0;  
+  return 0;
 }
 
-int PureCfrMachine::walk_pure_cfr( const int position,
+double PureCfrMachine::walk_pure_cfr( const int position,
 				   const BettingNode *cur_node,
 				   const hand_t &hand,
 				   rng_state_t &rng )
 {
-  int retval = 0;
+  double retval = 0;
 
   if( ( cur_node->get_child( ) == NULL )
       || cur_node->did_player_fold( position ) ) {
     /* Game over, calculate utility */
-    
+
     retval = cur_node->evaluate( hand, position );
-    
+
     return retval;
   }
 
@@ -392,8 +397,8 @@ int PureCfrMachine::walk_pure_cfr( const int position,
   }
 
   /* Get the positive regrets at this information set */
-  uint64_t pos_regrets[ num_choices ];
-  uint64_t sum_pos_regrets
+  double pos_regrets[ num_choices ];
+  double sum_pos_regrets
     = regrets[ round ]->get_pos_values( bucket,
 					soln_idx,
 					num_choices,
@@ -407,7 +412,7 @@ int PureCfrMachine::walk_pure_cfr( const int position,
   }
 
   /* Purify the current strategy so that we always take choice */
-  uint64_t dart = genrand_int32( &rng ) % sum_pos_regrets;
+  double dart = genrand_int32( &rng ) % sum_pos_regrets;
   int choice;
   for( choice = 0; choice < num_choices; ++choice ) {
     if( dart < pos_regrets[ choice ] ) {
@@ -417,11 +422,24 @@ int PureCfrMachine::walk_pure_cfr( const int position,
   }
   assert( choice < num_choices );
   assert( pos_regrets[ choice ] > 0 );
-  
+
   const BettingNode *child = cur_node->get_child( );
 
   if( player != position ) {
     /* Opponent's node. Recurse down the single choice. */
+
+    /* Update the average strategy if we are keeping track of one */
+  if( do_average ) {
+      for( int c = 0; c < num_choices; ++c ) {
+          double ns = pos_regrets[c]/sum_pos_regrets;
+          if( avg_strategy[ round ]->increment_entry( bucket, soln_idx, c, ns ) ) {
+              fprintf( stderr, "The average strategy has overflown :(\n" );
+              fprintf( stderr, "To fix this, you must set a bigger AVG_STRATEGY_TYPE "
+                      "in constants.cpp and start again from scratch.\n" );
+              exit( 1 );
+          }
+      }
+  }
 
     for( int c = 0; c < choice; ++c ) {
       child = child->get_sibling( );
@@ -429,7 +447,7 @@ int PureCfrMachine::walk_pure_cfr( const int position,
 
     retval = walk_pure_cfr( position, child, hand, rng );
 
-    /* Update the average strategy if we are keeping track of one */
+    /* Update the average strategy if we are keeping track of one
     if( do_average ) {
       if( avg_strategy[ round ]->increment_entry( bucket, soln_idx, choice ) ) {
 	fprintf( stderr, "The average strategy has overflown :(\n" );
@@ -437,25 +455,30 @@ int PureCfrMachine::walk_pure_cfr( const int position,
 		 "in constants.cpp and start again from scratch.\n" );
 	exit( 1 );
       }
-    }
-    
+    }*/
+
   } else {
     /* Current player's node. Recurse down all choices to get the value of each */
-
     int values[ num_choices ];
-    
+
     for( int c = 0; c < num_choices; ++c ) {
       values[ c ] = walk_pure_cfr( position, child, hand, rng );
       child = child->get_sibling( );
     }
 
     /* We return the value that the sampled pure strategy attains */
-    retval = values[ choice ];
+    /* retval = values[ choice ]; */
+
+    /* Weight return value */
+    for( int c = 0; c < num_choices; ++c ) {
+            double ns = pos_regrets[c]/sum_pos_regrets;
+            retval += values[c] * ns;
+    }
 
     /* Update the regrets at the current node */
     regrets[ round ]->update_regret( bucket, soln_idx, num_choices,
 				     values, retval );
   }
-  
+
   return retval;
 }

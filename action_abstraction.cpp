@@ -95,7 +95,7 @@ int FcpaActionAbstraction::get_actions( const Game *game,
 					[ MAX_ABSTRACT_ACTIONS ] ) const
 {
   assert( MAX_ABSTRACT_ACTIONS >= 4 );
-  
+
   int num_actions = 0;
   for( int a = 0; a < NUM_ACTION_TYPES; ++a ) {
     Action action;
@@ -121,14 +121,14 @@ int FcpaActionAbstraction::get_actions( const Game *game,
 	if( pot_raise_size < max_raise_size ) {
 	  actions[ num_actions ] = action;
 	  actions[ num_actions ].size = pot_raise_size;
-	  ++num_actions;	  
+	  ++num_actions;
 	}
 	/* Now add all-in */
 	actions[ num_actions ] = action;
 	actions[ num_actions ].size = max_raise_size;
 	++num_actions;
       }
-	
+
     } else if( isValidAction( game, &state, 0, &action ) ) {
       /* Fold and call */
       actions[ num_actions ] = action;

@@ -36,9 +36,9 @@ public:
 			      const int64_t soln_idx,
 			      const int num_choices,
 			      const int *values,
-			      const int retval ) = 0;
+			      const double retval ) = 0;
   /* Return 0 on success, 1 on overflow */
-  virtual int increment_entry( const int bucket, const int64_t soln_idx, const int choice ) = 0;
+  virtual int increment_entry( const int bucket, const int64_t soln_idx, const int choice, const double ns ) = 0;
 
   /* Return 0 on success, 1 on failure */
   virtual int write( FILE *file ) const = 0;
@@ -56,7 +56,7 @@ protected:
 template <typename T>
 class Entries_der : public Entries {
 public:
-  
+
   Entries_der( size_t new_num_entries_per_bucket,
 	       size_t new_total_num_entries,
 	       T *loaded_data = NULL );
@@ -70,10 +70,10 @@ public:
 			      const int64_t soln_idx,
 			      const int num_choices,
 			      const int *values,
-			      const int retval );
+			      const double retval );
   virtual int increment_entry( const int bucket,
 			       const int64_t soln_idx,
-			       const int choice );
+			       const int choice, double ns );
 
   virtual int write( FILE *file ) const;
   virtual int load( FILE *file );
@@ -156,7 +156,7 @@ void Entries_der<T>::update_regret( const int bucket,
 				    const int64_t soln_idx,
 				    const int num_choices,
 				    const int *values,
-				    const int retval )
+				    const double retval )
 {
   /* Get a pointer to the local entries at this index */
   size_t base_index = get_entry_index( bucket, soln_idx );
@@ -174,13 +174,13 @@ void Entries_der<T>::update_regret( const int bucket,
 }
 
 template <typename T>
-int Entries_der<T>::increment_entry( const int bucket, const int64_t soln_idx, const int choice )
+int Entries_der<T>::increment_entry( const int bucket, const int64_t soln_idx, const int choice, const double ns )
 {
   /* Get a pointer to the local entries at this index */
   size_t base_index = get_entry_index( bucket, soln_idx );
   T *local_entries = &entries[ base_index ];
 
-  local_entries[ choice ] += 1;
+  local_entries[ choice ] += ns;
 
   if( local_entries[ choice ] <= 0 ) {
     /* Overflow! */
@@ -198,7 +198,7 @@ int Entries_der<T>::write( FILE *file ) const
 	     "which is not allowed\n" );
     return 1;
   }
-  
+
   /* First, write the type to file */
   pure_cfr_entry_type_t type = get_entry_type( );
   size_t num_written = fwrite( &type, sizeof( pure_cfr_entry_type_t ), 1, file );
@@ -213,8 +213,8 @@ int Entries_der<T>::write( FILE *file ) const
     fprintf( stderr, "error while writing; only wrote %jd of %jd entries\n",
 	     ( intmax_t ) num_written, ( intmax_t ) total_num_entries );
     return 1;
-  }  
-  
+  }
+
   return 0;
 }
 
@@ -226,7 +226,7 @@ int Entries_der<T>::load( FILE *file )
 	     "instantiation, which is not allowed\n" );
     return 1;
   }
-  
+
   /* First, load the type and double-check that it matches */
   pure_cfr_entry_type_t type;
   size_t num_read = fread( &type,
@@ -250,8 +250,8 @@ int Entries_der<T>::load( FILE *file )
     fprintf( stderr, "error while loading; only read %jd of %jd entries\n",
 	     ( intmax_t ) num_read, ( intmax_t ) total_num_entries );
     return 1;
-  }  
-  
+  }
+
   return 0;
 }
 
@@ -266,6 +266,8 @@ pure_cfr_entry_type_t Entries_der<T>::get_entry_type( ) const
     return TYPE_UINT32_T;
   } else if( typeid( T ) == typeid( uint64_t ) ) {
     return TYPE_UINT64_T;
+  } else if( typeid( T ) == typeid( double ) ) {
+    return TYPE_DOUBLE;
   } else {
     fprintf( stderr, "called get_entry_type for unrecognized template type!\n" );
     assert( 0 );
