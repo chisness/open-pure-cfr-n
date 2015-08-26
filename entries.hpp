@@ -31,11 +31,11 @@ public:
   virtual uint64_t get_pos_values( const int bucket,
 				   const int64_t soln_idx,
 				   const int num_choices,
-				   uint64_t *pos_values ) const = 0;
+				   double *pos_values ) const = 0;
   virtual void update_regret( const int bucket,
 			      const int64_t soln_idx,
 			      const int num_choices,
-			      const int *values,
+			      const double *values,
 			      const double retval ) = 0;
   /* Return 0 on success, 1 on overflow */
   virtual int increment_entry( const int bucket, const int64_t soln_idx, const int choice, const double ns ) = 0;
@@ -130,10 +130,10 @@ Entries_der<T>::~Entries_der( )
 }
 
 template <typename T>
-uint64_t Entries_der<T>::get_pos_values( const int bucket,
+double Entries_der<T>::get_pos_values( const int bucket,
 					 const int64_t soln_idx,
 					 const int num_choices,
-					 uint64_t *values ) const
+					 double *values ) const
 {
   /* Get the local entries at this index */
   size_t base_index = get_entry_index( bucket, soln_idx );
@@ -141,7 +141,7 @@ uint64_t Entries_der<T>::get_pos_values( const int bucket,
   memcpy( local_entries, &entries[ base_index ], num_choices * sizeof( T ) );
 
   /* Zero out negative values and store in the returned array */
-  uint64_t sum_values = 0;
+  double sum_values = 0;
   for( int c = 0; c < num_choices; ++c ) {
     local_entries[ c ] *= ( local_entries[ c ] > 0 );
     values[ c ] = local_entries[ c ];
@@ -155,7 +155,7 @@ template <typename T>
 void Entries_der<T>::update_regret( const int bucket,
 				    const int64_t soln_idx,
 				    const int num_choices,
-				    const int *values,
+				    const double *values,
 				    const double retval )
 {
   /* Get a pointer to the local entries at this index */

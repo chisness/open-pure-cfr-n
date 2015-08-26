@@ -50,14 +50,15 @@ PureCfrMachine::PureCfrMachine( const Parameters &params )
       /* Regret */
       switch( REGRET_TYPES[ r ] ) {
       case TYPE_DOUBLE:
-	regrets[ r ] = new Entries_der<double>( num_entries_per_bucket[ r ],
+	      regrets[ r ]
+          = new Entries_der<double>( num_entries_per_bucket[ r ],
 					     total_num_entries[ r ] );
-	break;
+	      break;
 
       default:
-	fprintf( stderr, "unrecognized regret type [%d], "
-		 "note that type must be signed\n", REGRET_TYPES[ r ] );
-	exit( -1 );
+	       fprintf( stderr, "unrecognized regret type [%d], "
+		       "note that type must be signed\n", REGRET_TYPES[ r ] );
+	      exit( -1 );
       }
 
       if( do_average ) {
@@ -384,7 +385,7 @@ double PureCfrMachine::walk_pure_cfr( const int position,
   }
 
   /* Grab some values that will be used often */
-  int num_choices = cur_node->get_num_choices( );
+  double num_choices = cur_node->get_num_choices( );
   int8_t player = cur_node->get_player( );
   int8_t round = cur_node->get_round( );
   int64_t soln_idx = cur_node->get_soln_idx( );
@@ -412,7 +413,7 @@ double PureCfrMachine::walk_pure_cfr( const int position,
   }
 
   /* Purify the current strategy so that we always take choice */
-  double dart = genrand_int32( &rng ) % sum_pos_regrets;
+  double dart = genrand_real2( &rng ) * sum_pos_regrets;
   int choice;
   for( choice = 0; choice < num_choices; ++choice ) {
     if( dart < pos_regrets[ choice ] ) {

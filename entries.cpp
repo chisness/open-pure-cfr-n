@@ -92,7 +92,7 @@ Entries *new_loaded_entries( const size_t num_entries_per_bucket,
 	case TYPE_DOUBLE: {
 		double *double_data = ( double * ) ( *data );
 		entries = new Entries_der<double>( num_entries_per_bucket,
-					 total_num_entries, uint64_t_data );
+					 total_num_entries, double_data );
 		double_data += total_num_entries;
 		( *data ) = ( void * ) double_data;
 		break;
