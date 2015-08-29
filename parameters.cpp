@@ -89,7 +89,7 @@ int Parameters::parse( const int argc, const char *argv[] )
   /* game */
   strncpy( game_file, argv[ index ], PATH_LENGTH );
   ++index;
-  
+
   /* output prefix */
   strncpy( output_prefix, argv[ index ], PATH_LENGTH );
   ++index;
@@ -112,7 +112,7 @@ int Parameters::parse( const int argc, const char *argv[] )
 	return 1;
       }
       fclose( file );
-      
+
     } else if( !strncmp( argv[ index ], "--rng=", strlen( "--rng=" ) ) ) {
       if( strcmp( &argv[ index ][ strlen( "--rng=" ) ], "TIME" ) == 0 ) {
 	for( int j = 0; j < NUM_RNG_SEEDS; ++j ) {
@@ -125,8 +125,8 @@ int Parameters::parse( const int argc, const char *argv[] )
 		 argv[ index ] );
 	return 1;
       }
-      rng_set = true;      
-      
+      rng_set = true;
+
     } else if( !strncmp( argv[ index ], "--card-abs=",
 			 strlen( "--card-abs=" ) ) ) {
       const char *abs_str = &argv[ index ][ strlen( "--card-abs=" ) ];
@@ -171,7 +171,7 @@ int Parameters::parse( const int argc, const char *argv[] )
 	}
 	rng_set = true;
       }
-      
+
     } else if( !strncmp( argv[ index ], "--threads=", strlen( "--threads=" ) ) ) {
       if( sscanf( &argv[ index ][ strlen( "--threads=" ) ], "%d",
     		  &num_threads ) < 1 ) {
@@ -206,7 +206,7 @@ int Parameters::parse( const int argc, const char *argv[] )
 	dump_timer.seconds_mult = 1;
 	dump_timer.seconds_add = dump_timer.seconds_start;
       }
-      
+
     } else if( !strncmp( argv[ index ], "--max-walltime=", strlen( "--max-walltime=" ) ) ) {
       max_walltime_seconds = time_string_to_seconds( &argv[ index ][ strlen( "--max-walltime=" ) ] );
       if( max_walltime_seconds <= 0 ) {
@@ -221,7 +221,7 @@ int Parameters::parse( const int argc, const char *argv[] )
       return 1;
     }
   }
-  
+
   /* all done */
   return 0;
 }
@@ -265,19 +265,19 @@ int Parameters::read_params( FILE *file )
     if( !strncmp( line, "PARAMETERS_END", strlen( "PARAMETERS_END" ) ) ) {
       /* End of parameters */
       break;
-      
+
     } else if( !strncmp( line, "GAME_FILE", strlen( "GAME_FILE" ) ) ) {
       if( get_next_token( game_file, &line[ strlen( "GAME_FILE" ) ] ) ) {
 	fprintf( stderr, "Error reading GAME_FILE from line [%s]\n", line );
 	return 1;
       }
-      
+
     } else if( !strncmp( line, "OUTPUT_PREFIX", strlen( "OUTPUT_PREFIX" ) ) ) {
       if( get_next_token( output_prefix, &line[ strlen( "OUTPUT_PREFIX" ) ] ) ) {
 	fprintf( stderr, "Error reading OUTPUT_PREFIX from line [%s]\n", line );
 	return 1;
       }
-      
+
     } else if( !strncmp( line, "RNG_SEEDS", strlen( "RNG_SEEDS" ) ) ) {
       /* Skip whitespace */
       int i = strlen( "RNG_SEEDS" );
@@ -289,7 +289,7 @@ int Parameters::read_params( FILE *file )
 	fprintf( stderr, "Error reading 4 RNG_SEEDS from line [%s]\n", line );
 	return 1;
       }
-      
+
     } else if( !strncmp( line, "CARD_ABSTRACTION",
 			 strlen( "CARD_ABSTRACTION" ) ) ) {
       char card_abs_str[ PATH_LENGTH ];
@@ -304,16 +304,16 @@ int Parameters::read_params( FILE *file )
 	if( !strcmp( card_abs_str, card_abs_type_to_str[ i ] ) ) {
 	  break;
 	}
-      } 
+      }
       card_abs_type = ( card_abs_type_t ) i;
       if( card_abs_type == NUM_CARD_ABS_TYPES ) {
 	fprintf( stderr, "Unrecognized card abstraction type from line [%s]\n",
 		 line );
 	return 1;
       }
-      
+
     } else if( !strncmp( line, "ACTION_ABSTRACTION",
-			 strlen( "ACTION_ABSTRACTION" ) ) ) { 
+			 strlen( "ACTION_ABSTRACTION" ) ) ) {
       char action_abs_str[ PATH_LENGTH ];
       if( get_next_token( action_abs_str,
 			  &line[ strlen( "ACTION_ABSTRACTION" ) ] ) ) {
@@ -333,7 +333,7 @@ int Parameters::read_params( FILE *file )
 		 line );
 	return 1;
       }
-      
+
     } else if( !strncmp( line, "LOAD_DUMP_PREFIX",
 			 strlen( "LOAD_DUMP_PREFIX" ) ) ) {
       load_dump = true;
@@ -343,7 +343,7 @@ int Parameters::read_params( FILE *file )
 		 line );
 	return 1;
       }
-      
+
     } else if( !strncmp( line, "NUM_THREADS", strlen( "NUM_THREADS" ) ) ) {
       /* Skip whitespace */
       int i = strlen( "NUM_THREADS" );
@@ -354,7 +354,7 @@ int Parameters::read_params( FILE *file )
 	fprintf( stderr, "Error reading NUM_THREADS from line [%s]\n", line );
 	return 1;
       }
-      
+
     } else if( !strncmp( line, "STATUS_FREQ_SECONDS",
 			 strlen( "STATUS_FREQ_SECONDS" ) ) ) {
       /* Skip whitespace */
@@ -367,7 +367,7 @@ int Parameters::read_params( FILE *file )
 		 line );
 	return 1;
       }
-      
+
     } else if( !strncmp( line, "DUMP_TIMER", strlen( "DUMP_TIMER" ) ) ) {
       /* Skip whitespace */
       int i = strlen( "DUMP_TIMER" );

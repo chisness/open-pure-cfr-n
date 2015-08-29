@@ -142,6 +142,7 @@ int FcpaActionAbstraction::get_actions( const Game *game,
 {
   assert( MAX_ABSTRACT_ACTIONS >= 4 );
 
+<<<<<<< HEAD
   int num_actions = 0;
   for( int a = 0; a < NUM_ACTION_TYPES; ++a ) {
     Action action;
@@ -334,6 +335,8 @@ int FcmqhtpaActionAbstraction::get_actions( const Game *game,
 {
   assert( MAX_ABSTRACT_ACTIONS >= 8 );
 
+=======
+>>>>>>> external
   int num_actions = 0;
   for( int a = 0; a < NUM_ACTION_TYPES; ++a ) {
     Action action;
