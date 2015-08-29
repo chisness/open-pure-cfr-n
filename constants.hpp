@@ -23,7 +23,7 @@ extern "C" {
 const int MAX_PURE_CFR_PLAYERS = 3;
 
 /* Maximum number of abstract actions a player can choose from */
-const int MAX_ABSTRACT_ACTIONS = 4;
+const int MAX_ABSTRACT_ACTIONS = 8;
 
 /* Length of strings used for filenames */
 const int PATH_LENGTH = 1024;
@@ -42,8 +42,12 @@ extern const char card_abs_type_to_str[ NUM_CARD_ABS_TYPES ][ PATH_LENGTH ];
 /* Enum of action abstraction types */
 typedef enum {
   ACTION_ABS_NULL = 0,
-  ACTION_ABS_FCPA = 1,
-  NUM_ACTION_ABS_TYPES = 2
+  ACTION_ABS_FA = 1,
+  ACTION_ABS_FCPA = 2,
+  ACTION_ABS_FCHA = 3,
+  ACTION_ABS_FCMHPA = 4,
+  ACTION_ABS_FCMQHTPA = 5,
+  NUM_ACTION_ABS_TYPES = 6
 } action_abs_type_t;
 extern const char action_abs_type_to_str[ NUM_ACTION_ABS_TYPES ][ PATH_LENGTH ];
 
