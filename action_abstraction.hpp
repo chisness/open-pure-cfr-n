@@ -50,19 +50,77 @@ public:
 protected:
 };
 
-/* The FCPA action abstraction only allows the fold, call, pot (if legal), and
- * allin actions.  Not applicable in limit games, but a good starting point for
- * nolimit games.
+/* 1)	Fold, allin
  */
-class FcpaActionAbstraction : public ActionAbstraction {
+class FaActionAbstraction : public ActionAbstraction {
 public:
 
-  FcpaActionAbstraction( );
-  virtual ~FcpaActionAbstraction( );
+  FaActionAbstraction( );
+  virtual ~FaActionAbstraction( );
 
   virtual int get_actions( const Game *game,
 			   const State &state,
 			   Action actions[ MAX_ABSTRACT_ACTIONS ] ) const;
+
+protected:
+};
+
+/* 2)	Fold, call, pot, allin
+ */
+class FcpaActionAbstraction : public ActionAbstraction {
+public:
+
+    FcpaActionAbstraction( );
+    virtual ~FcpaActionAbstraction( );
+
+    virtual int get_actions( const Game *game,
+                            const State &state,
+                            Action actions[ MAX_ABSTRACT_ACTIONS ] ) const;
+
+protected:
+};
+
+/* 3)	Fold, call, half pot, allin
+ */
+class FchaActionAbstraction : public ActionAbstraction {
+public:
+
+    FchaActionAbstraction( );
+    virtual ~FchaActionAbstraction( );
+
+    virtual int get_actions( const Game *game,
+                            const State &state,
+                            Action actions[ MAX_ABSTRACT_ACTIONS ] ) const;
+
+protected:
+};
+
+/* 4)	Fold, call, minimum, half pot, pot, allin
+ */
+class FcmhpaActionAbstraction : public ActionAbstraction {
+public:
+
+    FcmhpaActionAbstraction( );
+    virtual ~FcmhpaActionAbstraction( );
+
+    virtual int get_actions( const Game *game,
+                            const State &state,
+                            Action actions[ MAX_ABSTRACT_ACTIONS ] ) const;
+
+protected:
+};
+
+/* 5)	Fold, call, minimum, one-quarter pot, half pot, three-quarters pot, pot, allin
+ */
+class FcmqhtpaActionAbstraction : public ActionAbstraction {
+public:
+
+    FcmqhtpaActionAbstraction( );
+    virtual ~FcmqhtpaActionAbstraction( );
+
+    virtual int get_actions( const Game *game,
+                            const State &state,
+                            Action actions[ MAX_ABSTRACT_ACTIONS ] ) const;
 
 protected:
 };
