@@ -53,10 +53,10 @@ PlayerModule::PlayerModule( const char *player_file )
     if( !strncmp( line, "PLAYER_END", strlen( "PLAYER_END" ) ) ) {
       /* End of player file */
       break;
-      
+
     } else if( !strncmp( line, "VERBOSE", strlen( "VERBOSE" ) ) ) {
       verbose = true;
-      
+
     } else if( !strncmp( line, "BINARY_FILENAME_PREFIX",
 			 strlen( "BINARY_FILENAME_PREFIX" ) ) ) {
       /* Get the binary filename to load later */
@@ -108,7 +108,7 @@ PlayerModule::PlayerModule( const char *player_file )
 	  MAX_ROUNDS * sizeof( num_entries_per_bucket[ 0 ] ) );
   memset( total_num_entries, 0, MAX_ROUNDS * sizeof( total_num_entries[ 0 ] ) );
   ag->count_entries( num_entries_per_bucket, total_num_entries );
-  
+
   /* Finally, build the entries from the dump */
   for( int r = 0; r < MAX_ROUNDS; ++r ) {
     if( r < ag->game->numRounds ) {
@@ -150,9 +150,9 @@ void PlayerModule::get_action_probs( State &state,
 {
   /* Initialize action probs to the default in case we must abort early
    * for one of several reasons
-   */  
+   */
   get_default_action_probs( state, action_probs );
-  
+
   if( verbose ) {
     char tmp[ PATH_LENGTH ];
     printState( ag->game, &state, PATH_LENGTH, tmp );
@@ -209,7 +209,7 @@ void PlayerModule::get_action_probs( State &state,
 		&& ( abstract_actions[ i ].size <= upper ) ) {
 	      upper = abstract_actions[ i ].size;
 	      upper_choice = i;
-	    }	    
+	    }
 	  }
 	}
 
@@ -238,24 +238,20 @@ void PlayerModule::get_action_probs( State &state,
 	  }
 	  choice = lower_choice;
 	} else {
-	  /* Get similarity metric values for lower and upper raises */
-	  double lower_sim
-	    = ( ( 1.0 * lower / real_action.size ) - ( 1.0 * lower / upper ) )
-	    / ( 1 - ( 1.0 * lower / upper ) );
+	  /* Translation formula */
+	  double fab
+        = ( ( upper - real_action.size ) * ( 1 + lower ) )
+        / ( ( upper - lower ) * ( 1 + real_action.size ) );
 
-	  double upper_sim
-	    = ( ( 1.0 * real_action.size / upper ) - ( 1.0 * lower / upper ) )
-	    / ( 1 - ( 1.0 * lower / upper ) );
-
-	  /* Throw a dart and probabilistically choose lower or upper */
+	  /* Throw a dart and choose based on fab variable */
 	  double dart = genrand_real2( &rng );
-	  if( dart < ( lower_sim / ( lower_sim + upper_sim ) ) ) {
-	    choice = lower_choice;
-	  } else {
-	    choice = upper_choice;
-	  }
-	}
-	
+      if( dart < fab ) {
+        choice = lower_choice;
+      } else {
+        choice = upper_choice;
+      }
+    }
+
       } else {
 	/* Limit game or non-raise action. Just match the real action. */
 	for( choice = 0; choice < num_actions; ++choice ) {
@@ -406,9 +402,9 @@ void PlayerModule::get_default_action_probs( State &state,
 					     [ MAX_ABSTRACT_ACTIONS ] ) const
 {
   /* Default will be always call */
-  
+
   memset( action_probs, 0, MAX_ABSTRACT_ACTIONS * sizeof( action_probs[ 0 ] ) );
-  
+
   /* Get the abstract actions */
   Action actions[ MAX_ABSTRACT_ACTIONS ];
   int num_choices = ag->action_abs->get_actions( ag->game, state, actions );
@@ -447,6 +443,6 @@ void print_player_file( const Parameters &params,
   params.print_params( file );
   fprintf( file, "BINARY_FILENAME_PREFIX %s\n", filename_prefix );
   fprintf( file, "PLAYER_END\n" );
-  
+
   fclose( file );
 }
