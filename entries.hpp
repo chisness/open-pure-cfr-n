@@ -28,7 +28,7 @@ public:
   virtual ~Entries( );
 
   /* Returns the sum of all pos_values in the returned pos_values array */
-  virtual uint64_t get_pos_values( const int bucket,
+  virtual double get_pos_values( const int bucket,
 				   const int64_t soln_idx,
 				   const int num_choices,
 				   double *pos_values ) const = 0;
@@ -62,14 +62,14 @@ public:
 	       T *loaded_data = NULL );
   virtual ~Entries_der( );
 
-  virtual uint64_t get_pos_values( const int bucket,
+  virtual double get_pos_values( const int bucket,
 				   const int64_t soln_idx,
 				   const int num_choices,
-				   uint64_t *pos_values ) const;
+				   double *pos_values ) const;
   virtual void update_regret( const int bucket,
 			      const int64_t soln_idx,
 			      const int num_choices,
-			      const int *values,
+			      const double *values,
 			      const double retval );
   virtual int increment_entry( const int bucket,
 			       const int64_t soln_idx,

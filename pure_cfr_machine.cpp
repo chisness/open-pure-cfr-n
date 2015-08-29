@@ -385,7 +385,7 @@ double PureCfrMachine::walk_pure_cfr( const int position,
   }
 
   /* Grab some values that will be used often */
-  double num_choices = cur_node->get_num_choices( );
+  int num_choices = cur_node->get_num_choices( );
   int8_t player = cur_node->get_player( );
   int8_t round = cur_node->get_round( );
   int64_t soln_idx = cur_node->get_soln_idx( );
@@ -460,7 +460,7 @@ double PureCfrMachine::walk_pure_cfr( const int position,
 
   } else {
     /* Current player's node. Recurse down all choices to get the value of each */
-    int values[ num_choices ];
+    double values[ num_choices ];
 
     for( int c = 0; c < num_choices; ++c ) {
       values[ c ] = walk_pure_cfr( position, child, hand, rng );
