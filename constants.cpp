@@ -16,7 +16,7 @@ const char card_abs_type_to_str[ NUM_CARD_ABS_TYPES ][ PATH_LENGTH ]
 = { "NULL", "BLIND" };
 
 const char action_abs_type_to_str[ NUM_ACTION_ABS_TYPES ][ PATH_LENGTH ]
-= { "NULL", "FCPA" };
+= { "NULL", "FA", "FCPA", "FCHA", "FCMHPA", "FCMQHTPA" };
 
 /* Store regrets as ints because they can have either sign and typically don't get "too" positive */
 const pure_cfr_entry_type_t

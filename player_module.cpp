@@ -329,7 +329,7 @@ void PlayerModule::get_action_probs( State &state,
   int num_choices = node->get_num_choices( );
   int64_t soln_idx = node->get_soln_idx( );
   int8_t round = node->get_round( );
-  uint64_t pos_entries[ num_choices ];
+  double pos_entries[ num_choices ];
   uint64_t sum_pos_entries = entries[ round ]->get_pos_values( bucket,
 							       soln_idx,
 							       num_choices,

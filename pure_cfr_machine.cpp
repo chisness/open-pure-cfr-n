@@ -432,7 +432,7 @@ double PureCfrMachine::walk_pure_cfr( const int position,
     /* Update the average strategy if we are keeping track of one */
   if( do_average ) {
       for( int c = 0; c < num_choices; ++c ) {
-          double ns = pos_regrets[c]/sum_pos_regrets;
+          double ns = 1.0*pos_regrets[c]/sum_pos_regrets;
           if( avg_strategy[ round ]->increment_entry( bucket, soln_idx, c, ns ) ) {
               fprintf( stderr, "The average strategy has overflown :(\n" );
               fprintf( stderr, "To fix this, you must set a bigger AVG_STRATEGY_TYPE "

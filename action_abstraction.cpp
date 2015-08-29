@@ -187,11 +187,11 @@ int FcpaActionAbstraction::get_actions( const Game *game,
 
 /* 3)	Fold, call, half pot, allin
  */
-FchaActionAbstraction::FcpaActionAbstraction( )
+FchaActionAbstraction::FchaActionAbstraction( )
 {
 }
 
-FchaActionAbstraction::~FcpaActionAbstraction( )
+FchaActionAbstraction::~FchaActionAbstraction( )
 {
 }
 
@@ -248,11 +248,11 @@ int FchaActionAbstraction::get_actions( const Game *game,
 
 /* 4)	Fold, call, minimum, half pot, pot, allin
  */
-FcmhpaActionAbstraction::FcpaActionAbstraction( )
+FcmhpaActionAbstraction::FcmhpaActionAbstraction( )
 {
 }
 
-FcmhpaActionAbstraction::~FcpaActionAbstraction( )
+FcmhpaActionAbstraction::~FcmhpaActionAbstraction( )
 {
 }
 
@@ -319,11 +319,11 @@ int FcmhpaActionAbstraction::get_actions( const Game *game,
 
 /* 5)	Fold, call, minimum, one-quarter pot, half pot, three-quarters pot, pot, allin
  */
-FcmqhtpaActionAbstraction::FcpaActionAbstraction( )
+FcmqhtpaActionAbstraction::FcmqhtpaActionAbstraction( )
 {
 }
 
-FcmqhtpaActionAbstraction::~FcpaActionAbstraction( )
+FcmqhtpaActionAbstraction::~FcmqhtpaActionAbstraction( )
 {
 }
 

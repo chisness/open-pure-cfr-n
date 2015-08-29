@@ -73,7 +73,7 @@ public:
 			      const double retval );
   virtual int increment_entry( const int bucket,
 			       const int64_t soln_idx,
-			       const int choice, double ns );
+			       const int choice, const double ns );
 
   virtual int write( FILE *file ) const;
   virtual int load( FILE *file );
@@ -182,10 +182,13 @@ int Entries_der<T>::increment_entry( const int bucket, const int64_t soln_idx, c
 
   local_entries[ choice ] += ns;
 
-  if( local_entries[ choice ] <= 0 ) {
+  cout << ns;
+
+  if( local_entries[ choice ] < 0 ) {
     /* Overflow! */
     return 1;
   }
+
 
   return 0;
 }
