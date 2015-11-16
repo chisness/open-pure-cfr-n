@@ -34,8 +34,9 @@ const int ITERATION_BLOCK_SIZE = 1000;
 /* Enum of card abstraction types */
 typedef enum {
   CARD_ABS_NULL = 0,
-  CARD_ABS_BLIND = 1,
-  NUM_CARD_ABS_TYPES = 2
+  CARD_ABS_SUIT = 1,
+  CARD_ABS_BLIND = 2,
+  NUM_CARD_ABS_TYPES = 3
 } card_abs_type_t;
 extern const char card_abs_type_to_str[ NUM_CARD_ABS_TYPES ][ PATH_LENGTH ];
 

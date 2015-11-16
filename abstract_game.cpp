@@ -39,12 +39,16 @@ AbstractGame::AbstractGame( const Parameters &params )
     break;
   case ACTION_ABS_FA:
     action_abs = new FaActionAbstraction( );
+    break;
   case ACTION_ABS_FCPA:
     action_abs = new FcpaActionAbstraction( );
+    break;
   case ACTION_ABS_FCHA:
     action_abs = new FchaActionAbstraction( );
+    break;
   case ACTION_ABS_FCMHPA:
     action_abs = new FcmhpaActionAbstraction( );
+    break;
   case ACTION_ABS_FCMQHTPA:
     action_abs = new FcmqhtpaActionAbstraction( );
     break;
@@ -70,6 +74,9 @@ AbstractGame::AbstractGame( const Parameters &params )
   switch( params.card_abs_type ) {
   case CARD_ABS_NULL:
     card_abs = new NullCardAbstraction( game );
+    break;
+  case CARD_ABS_SUIT:
+    card_abs = new SuitCardAbstraction( game );
     break;
   case CARD_ABS_BLIND:
     card_abs = new BlindCardAbstraction( );

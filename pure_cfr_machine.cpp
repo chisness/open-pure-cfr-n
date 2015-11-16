@@ -431,6 +431,7 @@ double PureCfrMachine::walk_pure_cfr( const int position,
 
     /* Update the average strategy if we are keeping track of one */
   if( do_average ) {
+    fprintf( stderr, "\nhello :)\n" );
       for( int c = 0; c < num_choices; ++c ) {
           double ns = 1.0*pos_regrets[c]/sum_pos_regrets;
           if( avg_strategy[ round ]->increment_entry( bucket, soln_idx, c, ns ) ) {

@@ -20,6 +20,8 @@ extern "C" {
 #include "constants.hpp"
 #include "betting_node.hpp"
 
+#include "hand_index.h"
+
 /* Base class */
 class CardAbstraction {
 public:
@@ -70,7 +72,36 @@ protected:
 				   [ MAX_HOLE_CARDS ],
 				   const int player,
 				   const int round ) const;
-  
+
+  const int deck_size;
+  int m_num_buckets[ MAX_ROUNDS ];
+};
+
+class SuitCardAbstraction : public CardAbstraction {
+public:
+
+  SuitCardAbstraction( const Game *game );
+  virtual ~SuitCardAbstraction( );
+
+  virtual int num_buckets( const Game *game, const BettingNode *node ) const;
+  virtual int num_buckets( const Game *game, const State &state ) const;
+  virtual int get_bucket( const Game *game,
+			  const BettingNode *node,
+			  const uint8_t board_cards[ MAX_BOARD_CARDS ],
+			  const uint8_t hole_cards[ MAX_PURE_CFR_PLAYERS ]
+			  [ MAX_HOLE_CARDS ] ) const;
+  virtual bool can_precompute_buckets( ) const { return true; }
+  virtual void precompute_buckets( const Game *game,
+				   hand_t &hand ) const;
+
+protected:
+  virtual int get_bucket_internal( const Game *game,
+				   const uint8_t board_cards[ MAX_BOARD_CARDS ],
+				   const uint8_t hole_cards[ MAX_PURE_CFR_PLAYERS ]
+				   [ MAX_HOLE_CARDS ],
+				   const int player,
+				   const int round ) const;
+
   const int deck_size;
   int m_num_buckets[ MAX_ROUNDS ];
 };
