@@ -217,7 +217,7 @@ int SuitCardAbstraction::get_bucket_internal( const Game *game,
     holec[1] = hole_cards[1][1];
   }
   if (round == 1)
-    const uint8_t all_cards = board_cards.insert(board_cards.end(), holec.begin(), holec.end());
+    const uint8_t all_cards = holec.insert(holec.end(), board_cards.begin(), board_cards.end());
   else
     const uint8_t all_cards = holec;
   hand_index_all(idxr, all_cards, idcs);
