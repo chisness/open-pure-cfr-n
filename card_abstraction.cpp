@@ -125,11 +125,12 @@ int NullCardAbstraction::get_bucket_internal( const Game *game,
 }
 
 SuitCardAbstraction::SuitCardAbstraction( const Game *game )
-  //: deck_size( game->numSuits * game->numRanks )
+  : deck_size( game->numSuits * game->numRanks )
 {
   //initialize hand indexer
-  hand_indexer_t idxr = new hand_indexer_t;
-  hand_indexer_init(2, {2,3}, idxr);
+  hand_indexer_t * idxr = new hand_indexer_t;
+  uint8_t gt[] = {2,3};
+  hand_indexer_init(2, gt, idxr);
 
 
 
@@ -206,7 +207,7 @@ int SuitCardAbstraction::get_bucket_internal( const Game *game,
 					      const int player,
 					      const int round ) const
 {
-  hand_indexer_t idcs[2] = new hand_indexer_t[2];
+  hand_index_t idcs[2] = new hand_index_t[2];
   uint8_t holec[2] = new uint8_t[2];
   if (player == 0) {
     holec[0] = hole_cards[0][0];
@@ -216,10 +217,7 @@ int SuitCardAbstraction::get_bucket_internal( const Game *game,
     holec[0] = hole_cards[1][0];
     holec[1] = hole_cards[1][1];
   }
-  if (round == 1)
-    const uint8_t all_cards = holec.insert(holec.end(), board_cards.begin(), board_cards.end());
-  else
-    const uint8_t all_cards = holec;
+  uint8_t all_cards[] = holec.insert(holec.end(), board_cards.begin(), board_cards.end());
   hand_index_all(idxr, all_cards, idcs);
   if (round == 0)
     return idcs[0];
