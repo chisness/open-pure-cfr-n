@@ -182,7 +182,7 @@ int Entries_der<T>::increment_entry( const int bucket, const int64_t soln_idx, c
 
   local_entries[ choice ] += ns;
 
-  cout << ns;
+  //cout << ns;
 
   if( local_entries[ choice ] < 0 ) {
     /* Overflow! */

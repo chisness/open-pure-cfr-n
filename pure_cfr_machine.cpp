@@ -434,12 +434,12 @@ double PureCfrMachine::walk_pure_cfr( const int position,
     fprintf( stderr, "\nhello :)\n" );
       for( int c = 0; c < num_choices; ++c ) {
           double ns = 1.0*pos_regrets[c]/sum_pos_regrets;
-          if( avg_strategy[ round ]->increment_entry( bucket, soln_idx, c, ns ) ) {
+        /*  if( avg_strategy[ round ]->increment_entry( bucket, soln_idx, c, ns ) ) {
               fprintf( stderr, "The average strategy has overflown :(\n" );
               fprintf( stderr, "To fix this, you must set a bigger AVG_STRATEGY_TYPE "
                       "in constants.cpp and start again from scratch.\n" );
               exit( 1 );
-          }
+          } */
       }
   }
 

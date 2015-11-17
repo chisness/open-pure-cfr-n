@@ -3,7 +3,7 @@
  *
  * @author Kevin Waugh (waugh@cs.cmu.edu)
  * @date April 13, 2013
- * 
+ *
  * map poker hands to an index shared by all isomorphic hands, and
  * map an index to a canonical poker hand
  */
@@ -13,9 +13,10 @@
 
 #include <inttypes.h>
 #include <stddef.h>
+#include <stdbool.h>
 #include "deck.h"
 
-#define MAX_ROUNDS           2
+#define MAX_ROUNDS_ISO           2
 
 typedef uint64_t hand_index_t;
 typedef struct hand_indexer_s hand_indexer_t;
@@ -29,7 +30,7 @@ typedef struct hand_indexer_state_s hand_indexer_state_t;
  *
  * @param rounds number of rounds
  * @param cards_per_round number of cards in each round
- * @param indexer 
+ * @param indexer
  */
 _Bool hand_indexer_init(uint_fast32_t rounds, const uint8_t cards_per_round[], hand_indexer_t * indexer);
 
@@ -42,7 +43,7 @@ void hand_indexer_free(hand_indexer_t * indexer);
 
 /**
  * @param indexer
- * @param round 
+ * @param round
  * @returns size of index for hands on round
  */
 hand_index_t hand_indexer_size(const hand_indexer_t * indexer, uint_fast32_t round);
@@ -77,7 +78,7 @@ hand_index_t hand_index_last(const hand_indexer_t * indexer, const uint8_t cards
 
 /**
  * Incrementally index the next round.
- * 
+ *
  * @param indexer
  * @param cards the cards for the next round only!
  * @param state

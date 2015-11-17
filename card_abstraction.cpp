@@ -10,11 +10,12 @@
 
 /* project_acpc_server includes */
 extern "C" {
+  #include "hand_index.h"
 }
 
 /* Pure CFR includes */
 #include "card_abstraction.hpp"
-#include "hand_index.h"
+#include "stdbool.h"
 
 CardAbstraction::CardAbstraction( )
 {
@@ -124,21 +125,21 @@ int NullCardAbstraction::get_bucket_internal( const Game *game,
 }
 
 SuitCardAbstraction::SuitCardAbstraction( const Game *game )
-  : deck_size( game->numSuits * game->numRanks )
+  //: deck_size( game->numSuits * game->numRanks )
 {
   //initialize hand indexer
-  uint8_t cpr[game->numRounds] = {2,3}
   hand_indexer_t idxr = new hand_indexer_t;
-  bool www = bool_indexer_init(game->numRounds, cpr, idxr);
+  hand_indexer_init(2, {2,3}, idxr);
+
 
 
   /* Precompute number of buckets per round */
-  m_num_buckets[ 0 ] = (game->numRanks * (game->numRanks - 1)) + game->numRanks
+  //m_num_buckets[ 0 ] = (game->numRanks * (game->numRanks - 1)) + game->numRanks
   //suited + unsuited + pairs (royal holdem = 25, regular holdem = 169)
   /*for( int i = 0; i < game->numHoleCards; ++i ) {
     m_num_buckets[ 0 ] *= deck_size;
   }*/
-  for( int r = 0; r < MAX_ROUNDS; ++r ) {
+  /*for( int r = 0; r < MAX_ROUNDS; ++r ) {
     if( r < game->numRounds ) {
       if( r > 0 ) {
 	m_num_buckets[ r ] = m_num_buckets[ r - 1 ];
@@ -149,7 +150,7 @@ SuitCardAbstraction::SuitCardAbstraction( const Game *game )
     } else {
       m_num_buckets[ r ] = 0;
     }
-  }
+  }*/
 }
 
 SuitCardAbstraction::~SuitCardAbstraction( )
@@ -160,14 +161,16 @@ int SuitCardAbstraction::num_buckets( const Game *game,
 				      const BettingNode *node ) const
 {
   //return m_num_buckets[ node->get_round() ];
-  return idxr->round_size[node->get_round()];
+  //return idxr->round_size[node->get_round()];
+  return hand_indexer_size(idxr, node->get_round());
 }
 
 int SuitCardAbstraction::num_buckets( const Game *game,
 				      const State &state ) const
 {
   //return m_num_buckets[ state.round ];
-  return idxr->round_size[state.round];
+  //return idxr->round_size[state.round];
+  return hand_indexer_size(idxr, state.round);
 }
 
 int SuitCardAbstraction::get_bucket( const Game *game,
@@ -203,9 +206,28 @@ int SuitCardAbstraction::get_bucket_internal( const Game *game,
 					      const int player,
 					      const int round ) const
 {
+  hand_indexer_t idcs[2] = new hand_indexer_t[2];
+  uint8_t holec[2] = new uint8_t[2];
+  if (player == 0) {
+    holec[0] = hole_cards[0][0];
+    holec[1] = hole_cards[0][1];
+  }
+  else {
+    holec[0] = hole_cards[1][0];
+    holec[1] = hole_cards[1][1];
+  }
+  if (round == 1)
+    const uint8_t all_cards = board_cards.insert(board_cards.end(), holec.begin(), holec.end());
+  else
+    const uint8_t all_cards = holec;
+  hand_index_all(idxr, all_cards, idcs);
+  if (round == 0)
+    return idcs[0];
+  else
+    return idcs[1];
   //use function hand_index_last
 
-  /* Calculate the unique bucket number for this hand */
+  /* Calculate the unique bucket number for this hand
   int bucket = 0;
   for( int i = 0; i < game->numHoleCards; ++i ) {
     if( i > 0 ) {
@@ -222,7 +244,7 @@ int SuitCardAbstraction::get_bucket_internal( const Game *game,
     }
   }
 
-  return bucket;
+  return bucket;*/
 }
 
 
